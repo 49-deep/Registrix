@@ -1,0 +1,40 @@
+# Environment & Secret Files
+.env
+.env.local
+.env.*.local
+.env.*
+*.env
+*.pem
+*.key
+*.crt
+
+# Log & Dump Files
+*.log
+php_errors.log
+*.sql
+*.dump
+*.tar.gz
+*.zip
+
+# Temporary & Test Artifacts
+cookies.txt
+login.html
+tmp/
+scratch/
+
+# OS & Desktop Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Settings
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Dependency Vendors
+vendor/
+
+# Uploads
+uploads/

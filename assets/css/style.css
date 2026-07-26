@@ -1,0 +1,906 @@
+/* ================================================================
+   Registrix — Masterpiece Design System & Visual Engine
+   Academic Library Card Catalog meets Modern Glassmorphism
+   ================================================================ */
+
+/* ── 1. Design Tokens ─────────────────────────────────────────── */
+:root {
+  /* Rich Palette */
+  --rgx-bg:           #F4F6F9;
+  --rgx-surface:      #FFFFFF;
+  --rgx-surface-elev: #FFFFFF;
+  --rgx-ink-primary:  #0F172A; /* Deep slate navy */
+  --rgx-ink-secondary:#475569; /* Soft slate gray */
+  --rgx-ink-muted:    #94A3B8;
+  
+  /* Accents */
+  --rgx-gold:         #D4AF37;
+  --rgx-gold-light:   #F3E5AB;
+  --rgx-gold-bg:      #FFFBEB;
+  --rgx-gold-border:  #FDE68A;
+  
+  --rgx-navy:         #0F2744;
+  --rgx-navy-light:   #1E3A8A;
+  --rgx-navy-bg:      #EFF6FF;
+
+  --rgx-success:      #059669;
+  --rgx-success-bg:   #ECFDF5;
+  --rgx-danger:       #DC2626;
+  --rgx-danger-bg:    #FEF2F2;
+  
+  --rgx-border:       #E2E8F0;
+  --rgx-border-dark:  #CBD5E1;
+
+  /* Typography */
+  --rgx-font-display: 'Lora', Georgia, serif;
+  --rgx-font-title:   'Outfit', 'Inter', system-ui, sans-serif;
+  --rgx-font-body:    'Inter', system-ui, sans-serif;
+  --rgx-font-mono:    'IBM Plex Mono', 'JetBrains Mono', monospace;
+
+  /* Spacing & Radii */
+  --rgx-radius:       8px;
+  --rgx-radius-lg:    16px;
+  --rgx-radius-xl:    24px;
+  
+  /* Shadows & Depth */
+  --rgx-shadow-sm:    0 1px 2px rgba(15, 23, 42, 0.04);
+  --rgx-shadow:       0 4px 16px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+  --rgx-shadow-lg:    0 16px 36px rgba(15, 23, 42, 0.10), 0 4px 12px rgba(15, 23, 42, 0.05);
+  --rgx-shadow-glow:  0 0 25px rgba(212, 175, 55, 0.25);
+
+  /* Transitions */
+  --rgx-transition:   220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── 2. Base Reset & Animations ───────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--rgx-font-body);
+  background-color: var(--rgx-bg);
+  color: var(--rgx-ink-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+/* Keyframes */
+@keyframes floatAnim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.15); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── 3. Typography Overrides ─────────────────────────────────── */
+h1, h2, h3, .rgx-display {
+  font-family: var(--rgx-font-display);
+  color: var(--rgx-ink-primary);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h4, h5, h6 {
+  font-family: var(--rgx-font-title);
+  font-weight: 600;
+  color: var(--rgx-ink-primary);
+}
+
+.rgx-mono {
+  font-family: var(--rgx-font-mono);
+}
+
+.rgx-gradient-text {
+  background: linear-gradient(135deg, var(--rgx-navy) 0%, var(--rgx-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── 4. Announcement Bar ──────────────────────────────────────── */
+.rgx-announcement-bar {
+  background: linear-gradient(90deg, #0F2744 0%, #1E3A8A 50%, #0F2744 100%);
+  color: #F8FAFC;
+  font-size: 0.82rem;
+  padding: 0.45rem 1rem;
+  text-align: center;
+  font-family: var(--rgx-font-title);
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ── 5. Navbar ─────────────────────────────────────────────────── */
+.rgx-navbar {
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rgx-border);
+  box-shadow: var(--rgx-shadow-sm);
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.rgx-brand {
+  font-family: var(--rgx-font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--rgx-ink-primary) !important;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rgx-brand-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--rgx-gold-bg);
+  border: 1px solid var(--rgx-gold-border);
+  color: var(--rgx-gold);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.rgx-navbar .nav-link {
+  font-family: var(--rgx-font-title);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--rgx-ink-secondary);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--rgx-radius);
+  transition: all var(--rgx-transition);
+}
+
+.rgx-navbar .nav-link:hover,
+.rgx-navbar .nav-link.active {
+  color: var(--rgx-ink-primary);
+  background-color: var(--rgx-bg);
+}
+
+/* ── 6. Buttons ────────────────────────────────────────────────── */
+.btn-primary, .rgx-btn-primary {
+  background: linear-gradient(135deg, #0F2744 0%, #1E3A8A 100%);
+  border: none;
+  color: #ffffff;
+  font-family: var(--rgx-font-title);
+  font-weight: 600;
+  border-radius: var(--rgx-radius);
+  box-shadow: 0 2px 8px rgba(15, 39, 68, 0.2);
+  transition: all var(--rgx-transition);
+}
+
+.btn-primary:hover, .rgx-btn-primary:hover {
+  background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+  transform: translateY(-2px);
+}
+
+.rgx-btn-outline-brass {
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--rgx-gold);
+  color: #92400E;
+  font-family: var(--rgx-font-title);
+  font-weight: 600;
+  border-radius: var(--rgx-radius);
+  transition: all var(--rgx-transition);
+}
+
+.rgx-btn-outline-brass:hover {
+  background-color: var(--rgx-gold);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+  border-color: var(--rgx-border-dark);
+  color: var(--rgx-ink-secondary);
+  font-family: var(--rgx-font-title);
+  font-weight: 500;
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--rgx-bg);
+  color: var(--rgx-ink-primary);
+  border-color: var(--rgx-ink-secondary);
+}
+
+.btn:focus-visible,
+.btn:focus {
+  outline: 2px solid var(--rgx-gold);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* ── 7. Form Controls ──────────────────────────────────────────── */
+.form-control, .form-select {
+  border-color: var(--rgx-border);
+  border-radius: var(--rgx-radius);
+  color: var(--rgx-ink-primary);
+  background-color: var(--rgx-surface);
+  font-family: var(--rgx-font-body);
+  font-size: 0.92rem;
+  transition: border-color var(--rgx-transition), box-shadow var(--rgx-transition);
+}
+
+.form-control::placeholder {
+  color: var(--rgx-ink-muted);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--rgx-navy-light);
+  box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.12);
+  outline: none;
+}
+
+.form-label {
+  font-family: var(--rgx-font-title);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rgx-ink-secondary);
+  margin-bottom: 0.35rem;
+}
+
+/* ── 8. Cards & Index Card ────────────────────────────────────── */
+.rgx-card {
+  background-color: var(--rgx-surface);
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius-lg);
+  box-shadow: var(--rgx-shadow);
+}
+
+.rgx-index-card {
+  background-color: var(--rgx-surface);
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius-lg);
+  box-shadow: var(--rgx-shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.rgx-index-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--rgx-gold-bg) 0px,
+    var(--rgx-gold-bg) 8px,
+    transparent       8px,
+    transparent       14px
+  );
+  border-bottom: 1px solid var(--rgx-border);
+}
+
+.rgx-index-card-body {
+  padding: 2.25rem 2.25rem 2rem;
+}
+
+/* ── 9. Roll Number & Status Badges ───────────────────────────── */
+.rgx-roll-badge {
+  display: inline-block;
+  font-family: var(--rgx-font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background-color: var(--rgx-gold-bg);
+  color: #92400E;
+  border: 1px solid var(--rgx-gold-border);
+  border-radius: 6px;
+  padding: 0.18rem 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+.rgx-roll-badge-lg {
+  font-size: 1.05rem;
+  padding: 0.35rem 0.95rem;
+}
+
+.rgx-status-active {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: var(--rgx-success-bg);
+  color: var(--rgx-success);
+  border: 1px solid rgba(5, 150, 105, 0.25);
+  border-radius: 20px;
+  padding: 0.22rem 0.75rem;
+}
+
+.rgx-status-inactive {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background-color: var(--rgx-danger-bg);
+  color: var(--rgx-danger);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 20px;
+  padding: 0.22rem 0.75rem;
+}
+
+/* ── 10. Table ─────────────────────────────────────────────────── */
+.rgx-table {
+  font-size: 0.9rem;
+  color: var(--rgx-ink-primary);
+  margin-bottom: 0;
+}
+
+.rgx-table thead th {
+  font-family: var(--rgx-font-title);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--rgx-ink-secondary);
+  background-color: var(--rgx-bg);
+  border-bottom: 1px solid var(--rgx-border);
+  padding: 0.85rem 1.1rem;
+  white-space: nowrap;
+}
+
+.rgx-table tbody td {
+  border-bottom: 1px solid var(--rgx-border);
+  padding: 0.85rem 1.1rem;
+  vertical-align: middle;
+}
+
+.rgx-table tbody tr:hover {
+  background-color: rgba(30, 58, 138, 0.03);
+}
+
+.rgx-photo-thumb {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--rgx-border);
+}
+
+.rgx-photo-placeholder {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  border: 1px solid var(--rgx-border);
+  background-color: var(--rgx-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rgx-ink-secondary);
+  font-size: 1.2rem;
+}
+
+/* ── 11. Alerts ────────────────────────────────────────────────── */
+.rgx-alert {
+  border-radius: var(--rgx-radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid;
+  padding: 0.75rem 1.1rem;
+}
+
+.rgx-alert-success {
+  background-color: var(--rgx-success-bg);
+  color: var(--rgx-success);
+  border-color: rgba(5, 150, 105, 0.3);
+}
+
+.rgx-alert-danger {
+  background-color: var(--rgx-danger-bg);
+  color: var(--rgx-danger);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.rgx-alert-info {
+  background-color: #F0F9FF;
+  color: #0369A1;
+  border-color: #BAE6FD;
+}
+
+/* ── 12. Page Headers ─────────────────────────────────────────── */
+.rgx-page-header {
+  padding: 2.25rem 0 1.75rem;
+  border-bottom: 1px solid var(--rgx-border);
+  margin-bottom: 2.25rem;
+}
+
+.rgx-page-title {
+  font-family: var(--rgx-font-display);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--rgx-ink-primary);
+  margin: 0;
+}
+
+.rgx-page-subtitle {
+  font-size: 0.92rem;
+  color: var(--rgx-ink-secondary);
+  margin: 0.3rem 0 0;
+}
+
+.rgx-hero-stamp {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--rgx-font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #92400E;
+  background-color: var(--rgx-gold-bg);
+  border: 1px solid var(--rgx-gold-border);
+  border-radius: 20px;
+  padding: 0.35rem 0.95rem;
+  box-shadow: 0 2px 6px rgba(212, 175, 55, 0.15);
+}
+
+.rgx-live-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #D97706;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  animation: pulseGlow 1.8s infinite ease-in-out;
+}
+
+/* ── 13. High-End Landing Page Custom Styling ─────────────────── */
+.rgx-master-hero {
+  position: relative;
+  padding: 5rem 0 4rem;
+  background: 
+    radial-gradient(ellipse at 50% -20%, rgba(30, 58, 138, 0.12), transparent 70%),
+    radial-gradient(ellipse at 80% 60%, rgba(212, 175, 55, 0.08), transparent 60%);
+  overflow: hidden;
+}
+
+.rgx-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FFFFFF;
+  border: 1px solid var(--rgx-border);
+  border-radius: 30px;
+  padding: 0.4rem 1.1rem;
+  box-shadow: var(--rgx-shadow-sm);
+  font-family: var(--rgx-font-title);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--rgx-navy);
+  margin-bottom: 1.5rem;
+}
+
+.rgx-master-hero-title {
+  font-family: var(--rgx-font-display);
+  font-size: clamp(2.5rem, 5.5vw, 4rem);
+  font-weight: 700;
+  color: var(--rgx-ink-primary);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+}
+
+.rgx-master-hero-sub {
+  font-size: 1.125rem;
+  color: var(--rgx-ink-secondary);
+  max-width: 580px;
+  margin: 0 auto 3rem;
+  line-height: 1.65;
+}
+
+/* Master Portal Selector Cards */
+.rgx-master-card {
+  background: var(--rgx-surface);
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius-xl);
+  box-shadow: var(--rgx-shadow-lg);
+  padding: 2.5rem 2.25rem;
+  position: relative;
+  transition: all var(--rgx-transition);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rgx-master-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.14), 0 0 0 2px var(--rgx-navy-light);
+}
+
+.rgx-master-card.student-master-card:hover {
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.14), 0 0 0 2px var(--rgx-gold);
+}
+
+.rgx-card-accent-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #0F2744 0%, #2563EB 100%);
+}
+
+.student-master-card .rgx-card-accent-bar {
+  background: linear-gradient(90deg, #B08D4F 0%, #F59E0B 100%);
+}
+
+.rgx-card-icon-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--rgx-navy-bg);
+  color: var(--rgx-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.85rem;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 0 0 1px rgba(30, 58, 138, 0.15);
+}
+
+.student-master-card .rgx-card-icon-avatar {
+  background: var(--rgx-gold-bg);
+  color: #B08D4F;
+  box-shadow: inset 0 0 0 1px rgba(176, 141, 79, 0.25);
+}
+
+.rgx-pill-feature {
+  font-family: var(--rgx-font-title);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--rgx-ink-secondary);
+  background-color: var(--rgx-bg);
+  border: 1px solid var(--rgx-border);
+  border-radius: 20px;
+  padding: 0.3rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ── 14. Interactive Mockup Showcase Section ─────────────────── */
+.rgx-mockup-frame {
+  background: #FFFFFF;
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius-xl);
+  box-shadow: var(--rgx-shadow-lg);
+  overflow: hidden;
+}
+
+.rgx-mockup-header {
+  background: #F8FAFC;
+  border-bottom: 1px solid var(--rgx-border);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rgx-mockup-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #CBD5E1;
+}
+
+.rgx-mockup-dot.red { background-color: #EF4444; }
+.rgx-mockup-dot.yellow { background-color: #F59E0B; }
+.rgx-mockup-dot.green { background-color: #10B981; }
+
+.rgx-mockup-body {
+  padding: 2rem;
+  background: var(--rgx-bg);
+}
+
+/* ── 15. Auth Forms ────────────────────────────────────────────── */
+.rgx-auth-wrap {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  padding: 2.5rem 0;
+}
+
+.rgx-auth-card {
+  background-color: var(--rgx-surface);
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius-xl);
+  box-shadow: var(--rgx-shadow-lg);
+  padding: 2.75rem 2.25rem;
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.rgx-auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--rgx-font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--rgx-ink-primary);
+  text-decoration: none;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.rgx-auth-logo i {
+  color: var(--rgx-gold);
+}
+
+.rgx-auth-heading {
+  font-family: var(--rgx-font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--rgx-ink-primary);
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.rgx-auth-sub {
+  font-size: 0.88rem;
+  color: var(--rgx-ink-secondary);
+  text-align: center;
+  margin-bottom: 1.85rem;
+}
+
+/* ── 16. Profile Photo & Details ──────────────────────────────── */
+.rgx-profile-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: var(--rgx-radius-lg);
+  border: 2px solid var(--rgx-border);
+}
+
+.rgx-profile-photo-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--rgx-radius-lg);
+  border: 2px solid var(--rgx-border);
+  background-color: var(--rgx-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rgx-ink-secondary);
+  font-size: 3rem;
+}
+
+.rgx-detail-label {
+  font-family: var(--rgx-font-title);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--rgx-ink-secondary);
+  margin-bottom: 0.15rem;
+}
+
+.rgx-detail-value {
+  font-size: 0.95rem;
+  color: var(--rgx-ink-primary);
+  font-weight: 500;
+}
+
+.rgx-detail-value.mono {
+  font-family: var(--rgx-font-mono);
+}
+
+/* ── 17. Search & Animations ─────────────────────────────────── */
+@keyframes rgxFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.rgx-result-row {
+  animation: rgxFadeIn 200ms ease both;
+}
+
+.rgx-no-results {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--rgx-ink-secondary);
+}
+
+.rgx-no-results-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--rgx-border-dark);
+}
+
+.rgx-divider {
+  border: none;
+  border-top: 1px solid var(--rgx-border);
+  margin: 2rem 0;
+}
+
+/* ── 18. Footer ───────────────────────────────────────────────── */
+.rgx-footer {
+  border-top: 1px solid var(--rgx-border);
+  background-color: var(--rgx-surface);
+}
+
+.rgx-footer-brand {
+  font-family: var(--rgx-font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--rgx-ink-primary);
+}
+
+.rgx-footer-brand i {
+  color: var(--rgx-gold);
+}
+
+.rgx-footer-sep {
+  color: var(--rgx-border-dark);
+}
+
+.rgx-footer-tagline {
+  font-size: 0.85rem;
+  color: var(--rgx-ink-secondary);
+}
+
+a {
+  color: var(--rgx-ink-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--rgx-gold);
+}
+
+/* ── 19. Action Bar & Table Container ────────────────────────── */
+.rgx-table-container {
+  background-color: var(--rgx-surface);
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius-lg);
+  box-shadow: var(--rgx-shadow);
+  overflow: hidden;
+}
+
+.rgx-action-bar {
+  background-color: var(--rgx-surface);
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius);
+  padding: 0.85rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+/* ── 20. Step Indicator ───────────────────────────────────────── */
+.rgx-steps {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.rgx-step {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex: 1;
+}
+
+.rgx-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--rgx-border);
+  background: var(--rgx-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--rgx-font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--rgx-ink-secondary);
+  flex-shrink: 0;
+}
+
+.rgx-step.active .rgx-step-num {
+  border-color: var(--rgx-navy);
+  background: var(--rgx-navy);
+  color: #fff;
+}
+
+.rgx-step.done .rgx-step-num {
+  border-color: var(--rgx-success);
+  background: var(--rgx-success);
+  color: #fff;
+}
+
+.rgx-step-label {
+  font-family: var(--rgx-font-title);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--rgx-ink-secondary);
+}
+
+.rgx-step.active .rgx-step-label {
+  color: var(--rgx-ink-primary);
+  font-weight: 600;
+}
+
+.rgx-step-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--rgx-border);
+  margin: 0 0.5rem;
+}
+
+.rgx-stat {
+  background: var(--rgx-surface);
+  border: 1px solid var(--rgx-border);
+  border-radius: var(--rgx-radius-lg);
+  padding: 1.2rem 1.5rem;
+  box-shadow: var(--rgx-shadow-sm);
+}
+
+.rgx-stat-number {
+  font-family: var(--rgx-font-mono);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: var(--rgx-ink-primary);
+  line-height: 1;
+}
+
+.rgx-stat-label {
+  font-family: var(--rgx-font-title);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rgx-ink-secondary);
+  margin-top: 0.3rem;
+}
+
+/* ── 21. Responsive Media Queries ────────────────────────────── */
+@media (max-width: 767.98px) {
+  .rgx-master-hero {
+    padding: 3.5rem 0 2.5rem;
+  }
+
+  .rgx-auth-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .rgx-hide-sm {
+    display: none;
+  }
+}

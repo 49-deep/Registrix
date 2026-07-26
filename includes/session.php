@@ -1,0 +1,105 @@
+<?php
+/**
+ * includes/session.php
+ * Starts the session, injects security headers, and provides CSRF & base_url helpers.
+ * Include this at the top of every page BEFORE any output.
+ */
+
+// ── Security Headers ──────────────────────────────────────────────────────────
+if (!headers_sent()) {
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-XSS-Protection: 1; mode=block');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+}
+
+// ── Session Initialization & Cookie Hardening ────────────────────────────────
+if (session_status() === PHP_SESSION_NONE) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'secure'   => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_start();
+}
+
+/**
+ * Return absolute URL for a given relative path.
+ * Works seamlessly on XAMPP subdirectories (/registrix/) and Railway root domain (/).
+ */
+if (!function_exists('base_url')) {
+    function base_url(string $path = ''): string {
+        $scheme   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $script   = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
+
+        $parts       = explode('/', trim($script, '/'));
+        $system_dirs = ['admin', 'student', 'api', 'config', 'includes', 'assets'];
+        if (!empty($parts[0]) && !in_array($parts[0], $system_dirs, true)) {
+            $base = '/' . $parts[0];
+        } else {
+            $base = '';
+        }
+
+        return $scheme . '://' . $host . $base . ($path ? '/' . ltrim($path, '/') : '');
+    }
+}
+
+/**
+ * Return the current CSRF token, generating one if needed.
+ */
+function csrf_token(): string {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+/**
+ * Render a hidden CSRF input field.
+ */
+function csrf_field(): string {
+    return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8') . '">';
+}
+
+/**
+ * Validate the CSRF token submitted in a POST request.
+ * Dies with 403 if invalid.
+ */
+function csrf_verify(): void {
+    $submitted = $_POST['csrf_token'] ?? '';
+    if (!hash_equals(csrf_token(), $submitted)) {
+        http_response_code(403);
+        die('Invalid CSRF token. Please go back and try again.');
+    }
+}
+
+/**
+ * Store a one-time flash message in the session.
+ */
+function flash_set(string $type, string $message): void {
+    $_SESSION['flash'] = ['type' => $type, 'message' => $message];
+}
+
+/**
+ * Retrieve and clear the flash message. Returns null if none.
+ *
+ * @return array{type: string, message: string}|null
+ */
+function flash_get(): ?array {
+    if (!empty($_SESSION['flash'])) {
+        $flash = $_SESSION['flash'];
+        unset($_SESSION['flash']);
+        return $flash;
+    }
+    return null;
+}
+
+/**
+ * Escape a value for safe HTML output.
+ */
+function e(mixed $val): string {
+    return htmlspecialchars((string)$val, ENT_QUOTES, 'UTF-8');
+}
