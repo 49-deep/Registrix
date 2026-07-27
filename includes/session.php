@@ -43,13 +43,17 @@ if (session_status() === PHP_SESSION_NONE) {
  */
 if (!function_exists('base_url')) {
     function base_url(string $path = ''): string {
-        $script      = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-        $parts       = explode('/', trim($script, '/'));
-        $system_dirs = ['admin', 'student', 'api', 'config', 'includes', 'assets'];
-        if (!empty($parts[0]) && !in_array($parts[0], $system_dirs, true)) {
-            $base = '/' . $parts[0];
-        } else {
-            $base = '';
+        $script = $_SERVER['SCRIPT_NAME'] ?? '';
+        $dir    = str_replace('\\', '/', dirname($script));
+        
+        $base = ($dir === '/' || $dir === '.') ? '' : $dir;
+
+        $system_dirs = ['/admin', '/student', '/api', '/config', '/includes', '/assets'];
+        foreach ($system_dirs as $sys_dir) {
+            if (str_ends_with($base, $sys_dir)) {
+                $base = substr($base, 0, -strlen($sys_dir));
+                break;
+            }
         }
 
         $clean_path = $path ? '/' . ltrim($path, '/') : '';
