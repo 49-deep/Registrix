@@ -7,7 +7,9 @@
 
 if (!function_exists('base_url')) {
     function base_url(string $path = ''): string {
-        $scheme   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                 || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+        $scheme   = $is_https ? 'https' : 'http';
         $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $script   = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
 

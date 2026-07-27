@@ -22,22 +22,9 @@ $raw_q = trim($_GET['q'] ?? '');
 $q     = mb_substr($raw_q, 0, 100); // Limit query length to 100 chars
 $pdo   = get_db();
 
-// Determine edit/delete/view base URLs
-$script  = $_SERVER['SCRIPT_NAME'] ?? '/api/search.php';
-$parts   = explode('/', trim($script, '/'));
-$system_dirs = ['admin', 'student', 'api', 'config', 'includes', 'assets'];
-$base_path = '';
-if (!empty($parts[0]) && !in_array($parts[0], $system_dirs, true)) {
-    $base_path = '/' . $parts[0];
-}
-
-$scheme   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$base_url = $scheme . '://' . $host . $base_path;
-
-$edit_url   = $base_url . '/admin/edit_student.php';
-$delete_url = $base_url . '/admin/delete_student.php';
-$view_url   = $base_url . '/admin/edit_student.php';
+$edit_url   = base_url('admin/edit_student.php');
+$delete_url = base_url('admin/delete_student.php');
+$view_url   = base_url('admin/edit_student.php');
 
 // ── Query Execution ──────────────────────────────────────────────────
 if (strlen($q) === 0) {

@@ -15,10 +15,12 @@ if (!headers_sent()) {
 
 // ── Session Initialization & Cookie Hardening ────────────────────────────────
 if (session_status() === PHP_SESSION_NONE) {
+    $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+             || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
     session_set_cookie_params([
         'lifetime' => 0,
         'path'     => '/',
-        'secure'   => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'secure'   => $is_https,
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
@@ -31,7 +33,9 @@ if (session_status() === PHP_SESSION_NONE) {
  */
 if (!function_exists('base_url')) {
     function base_url(string $path = ''): string {
-        $scheme   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                 || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+        $scheme   = $is_https ? 'https' : 'http';
         $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
         $script   = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
 
