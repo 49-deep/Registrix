@@ -43,12 +43,7 @@ if (session_status() === PHP_SESSION_NONE) {
  */
 if (!function_exists('base_url')) {
     function base_url(string $path = ''): string {
-        $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-                 || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
-        $scheme   = $is_https ? 'https' : 'http';
-        $host     = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $script   = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-
+        $script      = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
         $parts       = explode('/', trim($script, '/'));
         $system_dirs = ['admin', 'student', 'api', 'config', 'includes', 'assets'];
         if (!empty($parts[0]) && !in_array($parts[0], $system_dirs, true)) {
@@ -57,7 +52,8 @@ if (!function_exists('base_url')) {
             $base = '';
         }
 
-        return $scheme . '://' . $host . $base . ($path ? '/' . ltrim($path, '/') : '');
+        $clean_path = $path ? '/' . ltrim($path, '/') : '';
+        return $base . ($clean_path ?: '/');
     }
 }
 
