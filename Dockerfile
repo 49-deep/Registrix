@@ -12,8 +12,10 @@ RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.c
 # Copy project files into Apache's document root
 COPY . /var/www/html/
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
+# Set permissions and session storage
+RUN mkdir -p /var/lib/php/sessions /tmp/php_sessions \
+    && chown -R www-data:www-data /var/www/html /var/lib/php/sessions /tmp/php_sessions \
+    && chmod -R 777 /var/lib/php/sessions /tmp/php_sessions \
     && find /var/www/html -type f -name "*.php" -exec chmod 644 {} \; \
     && find /var/www/html -type d -exec chmod 755 {} \;
 

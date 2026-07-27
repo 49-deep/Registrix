@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             SELECT sa.id, sa.password_hash, sa.student_id, s.name
             FROM `student_accounts` sa
             JOIN `students` s ON s.id = sa.student_id
-            WHERE sa.username = ?
+            WHERE LOWER(sa.username) = LOWER(?)
             LIMIT 1
         ");
         $stmt->execute([$username]);

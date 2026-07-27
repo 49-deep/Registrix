@@ -15,11 +15,21 @@ if (!headers_sent()) {
 
 // ── Session Initialization & Cookie Hardening ────────────────────────────────
 if (session_status() === PHP_SESSION_NONE) {
+    $session_dir = sys_get_temp_dir() . '/php_sessions';
+    if (!is_dir($session_dir)) {
+        @mkdir($session_dir, 0777, true);
+    }
+    @chmod($session_dir, 0777);
+    @session_save_path($session_dir);
+
     $is_https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-             || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+             || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
+             || (($_SERVER['HTTP_X_FORWARDED_SSL'] ?? '') === 'on');
+
     session_set_cookie_params([
         'lifetime' => 0,
         'path'     => '/',
+        'domain'   => '',
         'secure'   => $is_https,
         'httponly' => true,
         'samesite' => 'Lax',

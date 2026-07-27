@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter both username/email and password.';
     } else {
         $pdo  = get_db();
-        $stmt = $pdo->prepare("SELECT `id`, `password_hash` FROM `admins` WHERE `username` = ? LIMIT 1");
+        $stmt = $pdo->prepare("SELECT `id`, `password_hash`, `username` FROM `admins` WHERE LOWER(`username`) = LOWER(?) LIMIT 1");
         $stmt->execute([$username]);
         $admin = $stmt->fetch();
 
