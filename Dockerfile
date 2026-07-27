@@ -9,12 +9,6 @@ RUN rm -f /etc/apache2/mods-enabled/mpm_*.load /etc/apache2/mods-enabled/mpm_*.c
     && a2enmod mpm_prefork \
     && a2enmod rewrite
 
-# Configure Apache to listen on dynamic ${PORT}
-ENV PORT=8080
-RUN sed -i 's/Listen 80/Listen ${PORT}/g' /etc/apache2/ports.conf \
-    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's/<VirtualHost \*:80>/<VirtualHost *:${PORT}>/g' /etc/apache2/sites-enabled/000-default.conf 2>/dev/null || true
-
 # Copy project files into Apache's document root
 COPY . /var/www/html/
 

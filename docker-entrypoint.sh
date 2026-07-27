@@ -10,12 +10,16 @@ a2enmod mpm_prefork 2>/dev/null || true
 PORT="${PORT:-8080}"
 
 if [ -f /etc/apache2/ports.conf ]; then
-    sed -i "s/Listen [0-9]*/Listen ${PORT}/g" /etc/apache2/ports.conf 2>/dev/null || true
+    sed -i -E "s/Listen .*/Listen ${PORT}/g" /etc/apache2/ports.conf
+fi
+
+if [ -f /etc/apache2/sites-available/000-default.conf ]; then
+    sed -i -E "s/<VirtualHost \*:.*/<VirtualHost *:${PORT}>/g" /etc/apache2/sites-available/000-default.conf
 fi
 
 for conf in /etc/apache2/sites-enabled/*.conf; do
     if [ -f "$conf" ]; then
-        sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${PORT}>/g" "$conf" 2>/dev/null || true
+        sed -i -E "s/<VirtualHost \*:.*/<VirtualHost *:${PORT}>/g" "$conf"
     fi
 done
 
