@@ -21,8 +21,9 @@ RUN chown -R www-data:www-data /var/www/html \
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Apache config: allow .htaccess overrides
-RUN echo '<Directory /var/www/html>\n\
+# Apache config: allow .htaccess overrides and set global ServerName
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && echo '<Directory /var/www/html>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
