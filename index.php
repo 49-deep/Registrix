@@ -5,9 +5,14 @@
 require_once __DIR__ . '/includes/session.php';
 require_once __DIR__ . '/config/db.php';
 
-// Fetch real showcase record directly from database
-$pdo = get_db();
-$showcase_student = $pdo->query("SELECT * FROM `students` ORDER BY `id` DESC LIMIT 1")->fetch();
+// Fetch real showcase record directly from database safely
+$showcase_student = null;
+try {
+    $pdo = get_db();
+    $showcase_student = $pdo->query("SELECT * FROM `students` ORDER BY `id` DESC LIMIT 1")->fetch();
+} catch (Throwable $e) {
+    $showcase_student = null;
+}
 
 $page_title = 'Welcome';
 $active_nav = 'home';
