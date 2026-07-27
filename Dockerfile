@@ -3,8 +3,10 @@ FROM php:8.2-apache
 # Install PDO MySQL extension
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Enable mod_rewrite (good practice)
-RUN a2enmod rewrite
+# Enable mpm_prefork and disable event/worker MPMs to avoid AH00534
+RUN a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork \
+    && a2enmod rewrite
 
 # Copy project files into Apache's document root
 COPY . /var/www/html/
