@@ -26,6 +26,9 @@ $student = $stmt->fetch();
 if (!$student) {
     flash_set('danger', 'Student not found.');
 } else {
+    $del_acc = $pdo->prepare("DELETE FROM `student_accounts` WHERE `student_id` = ?");
+    $del_acc->execute([$id]);
+
     $del = $pdo->prepare("DELETE FROM `students` WHERE `id` = ?");
     $del->execute([$id]);
     flash_set('success', 'Student "' . $student['name'] . '" has been deleted.');
