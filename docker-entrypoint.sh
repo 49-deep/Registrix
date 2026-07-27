@@ -13,17 +13,19 @@ if [ -d /etc/apache2/mods-enabled ]; then
 fi
 
 # ── Rewrite Apache's Listen port to Railway's $PORT ─────────────
-PORT="${PORT:-8080}"
+export PORT="${PORT:-8080}"
 
-# Update the main Apache ports.conf
+# Update main Apache ports.conf if present
 if [ -f /etc/apache2/ports.conf ]; then
-    sed -i "s/Listen [0-9]*/Listen ${PORT}/g" /etc/apache2/ports.conf
+    sed -i "s/Listen [0-9]*/Listen ${PORT}/g" /etc/apache2/ports.conf 2>/dev/null || true
+    sed -i "s/Listen \\\${PORT}/Listen ${PORT}/g" /etc/apache2/ports.conf 2>/dev/null || true
 fi
 
-# Update any VirtualHost *:80 in sites-enabled
+# Update VirtualHost directives in sites-enabled
 for conf in /etc/apache2/sites-enabled/*.conf; do
     if [ -f "$conf" ]; then
-        sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${PORT}>/g" "$conf"
+        sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${PORT}>/g" "$conf" 2>/dev/null || true
+        sed -i "s/<VirtualHost \*:\\\${PORT}>/<VirtualHost *:${PORT}>/g" "$conf" 2>/dev/null || true
     fi
 done
 
